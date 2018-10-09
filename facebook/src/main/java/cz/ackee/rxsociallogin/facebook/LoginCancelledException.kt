@@ -1,4 +1,4 @@
-package cz.ackee.rxfacebooklogin
+package cz.ackee.rxsociallogin.facebook
 
 /**
  * Exception indicating that Facebook login flow has been cancelled.

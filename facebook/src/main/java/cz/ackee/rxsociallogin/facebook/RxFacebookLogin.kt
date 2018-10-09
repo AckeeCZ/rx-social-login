@@ -1,4 +1,4 @@
-package cz.ackee.rxfacebooklogin
+package cz.ackee.rxsociallogin.facebook
 
 import android.app.Activity
 import android.content.Intent
