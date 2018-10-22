@@ -8,6 +8,7 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import cz.ackee.rxsociallogin.core.LoginCancelledException
 import io.reactivex.Single
 
 /**
