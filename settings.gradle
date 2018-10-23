@@ -1,1 +1,1 @@
-include ':facebook'
+include ':core', ':facebook', ':google'
