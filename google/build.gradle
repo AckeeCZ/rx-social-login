@@ -39,8 +39,8 @@ ext {
     bintrayName = 'google'
     publishedArtifactId = 'google'
 
-    libraryName = 'Rx Social Login'
-    libraryDescription = 'Reactive social login Android library'
+    libraryName = 'Rx Google Login'
+    libraryDescription = 'Reactive Google login Android library'
 }
 
 apply from: rootProject.file('gradle/bintray/install.gradle')
