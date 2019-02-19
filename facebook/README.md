@@ -1,3 +1,11 @@
+# RxSocialLogin
+
+For all library parts to work, you need to add Core dependency
+
+```groovy
+compile 'cz.ackee.rxsociallogin:core:x.x.x'
+```
+
 ## RxFacebookLogin
 Reactive wrapper for Facebook login.
 

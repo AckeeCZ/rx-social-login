@@ -27,3 +27,14 @@ dependencies {
     androidTestImplementation "com.google.dexmaker:dexmaker-mockito:$dexmakerVersion"
     androidTestImplementation "androidx.test:rules:$androidTestVersion"
 }
+
+ext {
+    bintrayName = 'core'
+    publishedArtifactId = 'core'
+
+    libraryName = 'Rx Social Login'
+    libraryDescription = 'Core functionality for Rx Social Login'
+}
+
+apply from: rootProject.file('gradle/bintray/install.gradle')
+apply from: rootProject.file('gradle/bintray/bintray.gradle')
