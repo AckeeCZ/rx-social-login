@@ -20,13 +20,13 @@ android {
 }
 
 dependencies {
-    implementation project(':core')
+    compileOnly project(':core')
 
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
 
-    implementation 'com.facebook.android:facebook-login:4.37.0'
+    api 'com.facebook.android:facebook-login:4.37.0'
 
     androidTestImplementation "junit:junit:$junitVersion"
     androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
