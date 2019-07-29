@@ -19,20 +19,20 @@ import io.reactivex.SingleEmitter
 /**
  * Class that handles Google login logic and transforms the result into reactive response.
  */
-class RxGoogleLogin(context: Context, additionalScopes: Array<Scope> = arrayOf()) {
+class RxGoogleLogin(
+    context: Context,
+    additionalScopes: Array<Scope> = arrayOf(),
+    private val tokenType: GoogleTokenType = GoogleTokenType.SERVER_AUTH_CODE) {
 
     companion object {
         private const val REQUEST_SIGN_IN = 10000
     }
 
-    private val googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestServerAuthCode(context.getString(R.string.google_server_client_id).also {
-                if (it.isEmpty()) {
-                    throw RuntimeException("Valid google_server_client_id should be provided in the app")
-                }
-            })
-            .requestScopes(Scope(Scopes.EMAIL), *additionalScopes)
-            .build())
+    private val client = GoogleSignIn.getClient(context, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestToken(context.getString(R.string.google_server_client_id))
+        .requestScopes(Scope(Scopes.EMAIL), *additionalScopes)
+        .build())
+    private val googleSignInClient = client
     private lateinit var signInEmitter: SingleEmitter<String>
 
     fun login(activity: Activity) = loginInternal(activity, null)
@@ -66,10 +66,31 @@ class RxGoogleLogin(context: Context, additionalScopes: Array<Scope> = arrayOf()
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
-            signInEmitter.onSuccess(completedTask.getResult(ApiException::class.java)!!.serverAuthCode!!)
+            val taskResult = completedTask.getResult(ApiException::class.java)!!
+            val tokenResult = when (tokenType) {
+                GoogleTokenType.SERVER_AUTH_CODE -> taskResult.serverAuthCode!!
+                GoogleTokenType.ID_TOKEN -> taskResult.idToken!!
+            }
+            signInEmitter.onSuccess(tokenResult)
         } catch (e: ApiException) {
             Log.e("RxGoogleLogin", "Login failed: status code = ${e.statusCode}")
             signInEmitter.onError(e)
         }
     }
+
+    private fun GoogleSignInOptions.Builder.requestToken(serverClientId: String): GoogleSignInOptions.Builder {
+        if (serverClientId.isEmpty()) {
+            throw RuntimeException("Valid google_server_client_id should be provided in the app")
+        } else {
+            return when (tokenType) {
+                GoogleTokenType.SERVER_AUTH_CODE -> requestServerAuthCode(serverClientId)
+                GoogleTokenType.ID_TOKEN -> requestIdToken(serverClientId)
+            }
+        }
+    }
+}
+
+enum class GoogleTokenType {
+    SERVER_AUTH_CODE,
+    ID_TOKEN
 }
