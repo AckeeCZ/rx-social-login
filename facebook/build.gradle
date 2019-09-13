@@ -26,7 +26,7 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
 
-    api 'com.facebook.android:facebook-login:4.37.0'
+    api 'com.facebook.android:facebook-login:5.4.0'
 
     androidTestImplementation "junit:junit:$junitVersion"
     androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
