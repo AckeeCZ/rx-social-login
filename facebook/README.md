@@ -15,7 +15,7 @@ compile 'cz.ackee.rxsociallogin:facebook:x.x.x'
 ```
 
 ### Setup
-All you need to do is add `facebook_app_id` and `fb_login_protocol_scheme` to your project string resources. You may find them in your Facebook project page.
+Follow [Getting started](https://developers.facebook.com/docs/facebook-login/android/) and add newest dependency to Facebook SDK along with AndroidManifest setup. You also need to setup your app in Facebook developers [page](https://developers.facebook.com/apps) 
 
 ### Usage
 Create `RxFacebookLogin`, you may then provide it via dependency injection or use directly.

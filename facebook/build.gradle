@@ -3,10 +3,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'maven-publish'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode = libProperties['VERSION_CODE']
         versionName libProperties['VERSION_NAME']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -22,17 +22,11 @@ android {
 dependencies {
     compileOnly project(':core')
 
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
 
-    api 'com.facebook.android:facebook-login:5.4.0'
-
-    androidTestImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
-    androidTestImplementation "com.google.dexmaker:dexmaker:$dexmakerVersion"
-    androidTestImplementation "com.google.dexmaker:dexmaker-mockito:$dexmakerVersion"
-    androidTestImplementation "androidx.test:rules:$androidTestVersion"
+    api 'com.facebook.android:facebook-login:5.13.0'
 }
 
 ext {
@@ -52,8 +46,9 @@ publishing {
             setGroupId(libProperties['GROUP'])
             setArtifactId(bintrayName)
             version libProperties['VERSION_NAME']
-
-            artifact(bundleReleaseAar)
+            afterEvaluate {
+                artifact(bundleReleaseAar)
+            }
         }
     }
 }
