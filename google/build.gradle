@@ -3,10 +3,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'maven-publish'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
+
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode = libProperties['VERSION_CODE']
         versionName libProperties['VERSION_NAME']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -26,13 +27,7 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
 
-    implementation 'com.google.android.gms:play-services-auth:16.0.1'
-
-    androidTestImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
-    androidTestImplementation "com.google.dexmaker:dexmaker:$dexmakerVersion"
-    androidTestImplementation "com.google.dexmaker:dexmaker-mockito:$dexmakerVersion"
-    androidTestImplementation "androidx.test:rules:$androidTestVersion"
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 }
 
 ext {
@@ -52,8 +47,9 @@ publishing {
             setGroupId(libProperties['GROUP'])
             setArtifactId(bintrayName)
             version libProperties['VERSION_NAME']
-
-            artifact(bundleReleaseAar)
+            afterEvaluate {
+                artifact(bundleReleaseAar)
+            }
 
             pom.withXml {
                 def dependenciesNode = asNode().appendNode('dependencies')

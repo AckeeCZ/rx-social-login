@@ -2,7 +2,7 @@ package cz.ackee.rxsociallogin.facebook
 
 import android.app.Activity
 import android.content.Intent
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
