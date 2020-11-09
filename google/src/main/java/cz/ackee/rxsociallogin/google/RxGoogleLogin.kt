@@ -21,10 +21,12 @@ import io.reactivex.SingleEmitter
  */
 class RxGoogleLogin(
     context: Context,
-    additionalScopes: Array<Scope> = arrayOf(),
-    private val tokenType: GoogleTokenType = GoogleTokenType.SERVER_AUTH_CODE) {
+    additionalScopes: Array<Scope> = emptyArray(),
+    private val tokenType: GoogleTokenType = GoogleTokenType.SERVER_AUTH_CODE
+) {
 
     companion object {
+
         private const val REQUEST_SIGN_IN = 10000
     }
 
@@ -33,50 +35,7 @@ class RxGoogleLogin(
         .requestScopes(Scope(Scopes.EMAIL), *additionalScopes)
         .build())
     private val googleSignInClient = client
-    private lateinit var signInEmitter: SingleEmitter<String>
-
-    fun login(activity: Activity) = loginInternal(activity, null)
-
-    fun login(fragment: Fragment) = loginInternal(null, fragment)
-
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_SIGN_IN) {
-            if (resultCode == Activity.RESULT_CANCELED) {
-                signInEmitter.onError(LoginCancelledException())
-            } else {
-                handleSignInResult(GoogleSignIn.getSignedInAccountFromIntent(data))
-            }
-        }
-    }
-
-    fun logout() {
-        googleSignInClient.signOut()
-    }
-
-    private fun loginInternal(activity: Activity?, fragment: Fragment?): Single<String> {
-        return Single.create<String> { emitter ->
-            if (activity != null) {
-                activity.startActivityForResult(googleSignInClient.signInIntent, REQUEST_SIGN_IN)
-            } else {
-                fragment!!.startActivityForResult(googleSignInClient.signInIntent, REQUEST_SIGN_IN)
-            }
-            signInEmitter = emitter
-        }
-    }
-
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
-        try {
-            val taskResult = completedTask.getResult(ApiException::class.java)!!
-            val tokenResult = when (tokenType) {
-                GoogleTokenType.SERVER_AUTH_CODE -> taskResult.serverAuthCode!!
-                GoogleTokenType.ID_TOKEN -> taskResult.idToken!!
-            }
-            signInEmitter.onSuccess(tokenResult)
-        } catch (e: ApiException) {
-            Log.e("RxGoogleLogin", "Login failed: status code = ${e.statusCode}")
-            signInEmitter.onError(e)
-        }
-    }
+    private var signInEmitter: SingleEmitter<String>? = null
 
     private fun GoogleSignInOptions.Builder.requestToken(serverClientId: String): GoogleSignInOptions.Builder {
         if (serverClientId.isEmpty()) {
@@ -87,6 +46,54 @@ class RxGoogleLogin(
                 GoogleTokenType.ID_TOKEN -> requestIdToken(serverClientId)
             }
         }
+    }
+
+    fun login(activity: Activity) = loginInternal(activity, null)
+
+    fun login(fragment: Fragment) = loginInternal(null, fragment)
+
+    private fun loginInternal(activity: Activity?, fragment: Fragment?): Single<String> {
+        return Single.create<String> { emitter ->
+            if (activity != null) {
+                activity.startActivityForResult(googleSignInClient.signInIntent, REQUEST_SIGN_IN)
+            } else {
+                fragment!!.startActivityForResult(googleSignInClient.signInIntent, REQUEST_SIGN_IN)
+            }
+            signInEmitter = emitter
+        }.doFinally {
+            // Clear reference on emitter to prevent leakage of whole returned Single together with
+            // fragment or activity when RxGoogleLogin is used as singleton (or generally lives longer
+            // than fragment or activity)
+            signInEmitter = null
+        }
+    }
+
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_SIGN_IN) {
+            if (resultCode == Activity.RESULT_CANCELED) {
+                signInEmitter?.onError(LoginCancelledException())
+            } else {
+                handleSignInResult(GoogleSignIn.getSignedInAccountFromIntent(data))
+            }
+        }
+    }
+
+    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val taskResult = completedTask.getResult(ApiException::class.java)!!
+            val tokenResult = when (tokenType) {
+                GoogleTokenType.SERVER_AUTH_CODE -> taskResult.serverAuthCode!!
+                GoogleTokenType.ID_TOKEN -> taskResult.idToken!!
+            }
+            signInEmitter?.onSuccess(tokenResult)
+        } catch (e: ApiException) {
+            Log.e("RxGoogleLogin", "Login failed: status code = ${e.statusCode}")
+            signInEmitter?.onError(e)
+        }
+    }
+
+    fun logout() {
+        googleSignInClient.signOut()
     }
 }
 

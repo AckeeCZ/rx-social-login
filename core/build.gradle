@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 29
@@ -32,3 +33,16 @@ ext {
 
 apply from: rootProject.file('gradle/bintray/install.gradle')
 apply from: rootProject.file('gradle/bintray/bintray.gradle')
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            setGroupId(libProperties['GROUP'])
+            setArtifactId(bintrayName)
+            version libProperties['VERSION_NAME']
+            afterEvaluate {
+                artifact(bundleReleaseAar)
+            }
+        }
+    }
+}
