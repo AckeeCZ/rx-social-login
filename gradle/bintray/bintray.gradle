@@ -44,8 +44,8 @@ if (project.rootProject.file('local.properties').exists()) {
 }
 
 bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
+    user = bintrayUser
+    key = bintrayApiKey
 
     configurations = ['archives']
     pkg {
