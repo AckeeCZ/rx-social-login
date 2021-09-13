@@ -1,9 +1,8 @@
 # Changelog
 
-## 1.1.0
-⚠️ Breaking changes ⚠️
+# Changelog
 
-- Migrate lib to AndroidX
-- Update dependencies
-- Remove `AndroidManifest` setup of Facebook module. Its now developers resposibility to set it up in their projects.
-- Cleanup of unused dependencies and files 
+## **1.2.0**
+- Migration from jCenter to Maven Central 🎉
+- ‼️ Important ‼️ groupId has changed. New groupId is `io.github.ackeecz`.
+

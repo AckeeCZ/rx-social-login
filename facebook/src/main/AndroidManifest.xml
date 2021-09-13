@@ -1,4 +1,1 @@
-<manifest package="cz.ackee.rxsociallogin.facebook">
-
-    <application />
-</manifest>
+<manifest package="io.github.ackeecz.rxsociallogin.facebook" />

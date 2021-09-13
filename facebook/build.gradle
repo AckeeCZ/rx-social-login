@@ -10,6 +10,7 @@ android {
         versionCode = libProperties['VERSION_CODE']
         versionName libProperties['VERSION_NAME']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        archivesBaseName = "rx-social-login-facebook"
     }
     buildTypes {
         release {
@@ -30,25 +31,8 @@ dependencies {
 }
 
 ext {
-    bintrayName = 'facebook'
-    publishedArtifactId = 'facebook'
-
-    libraryName = 'Rx Facebook Login'
-    libraryDescription = 'Reactive Facebook login Android library'
+    PUBLISH_ARTIFACT_ID = 'rx-social-login-facebook'
+    POM_DESCRIPTION = 'Reactive Facebook login Android library'
 }
 
-apply from: rootProject.file('gradle/bintray/install.gradle')
-apply from: rootProject.file('gradle/bintray/bintray.gradle')
-
-publishing {
-    publications {
-        library(MavenPublication) {
-            setGroupId(libProperties['GROUP'])
-            setArtifactId(bintrayName)
-            version libProperties['VERSION_NAME']
-            afterEvaluate {
-                artifact(bundleReleaseAar)
-            }
-        }
-    }
-}
+apply from: "${rootProject.projectDir}/gradle/mavencentral/publish.gradle"

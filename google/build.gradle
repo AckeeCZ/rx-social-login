@@ -4,13 +4,13 @@ apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 31
-
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 31
         versionCode = libProperties['VERSION_CODE']
         versionName libProperties['VERSION_NAME']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        archivesBaseName = "rx-social-login-google"
     }
     buildTypes {
         release {
@@ -21,7 +21,7 @@ android {
 }
 
 dependencies {
-    implementation project(':core')
+    compileOnly project(':core')
 
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
@@ -31,37 +31,8 @@ dependencies {
 }
 
 ext {
-    bintrayName = 'google'
-    publishedArtifactId = 'google'
-
-    libraryName = 'Rx Google Login'
-    libraryDescription = 'Reactive Google login Android library'
+    PUBLISH_ARTIFACT_ID = 'rx-social-login-google'
+    POM_DESCRIPTION = 'Reactive Google login Android library'
 }
 
-apply from: rootProject.file('gradle/bintray/install.gradle')
-apply from: rootProject.file('gradle/bintray/bintray.gradle')
-
-publishing {
-    publications {
-        library(MavenPublication) {
-            setGroupId(libProperties['GROUP'])
-            setArtifactId(bintrayName)
-            version libProperties['VERSION_NAME']
-            afterEvaluate {
-                artifact(bundleReleaseAar)
-            }
-
-            pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-                configurations.implementation.allDependencies.each {
-                    if (it.group != null && (it.name != null || !"unspecified".equals(it.name)) && it.version != null && !"unspecified".equals(it.version)) {
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', it.group)
-                        dependencyNode.appendNode('artifactId', it.name)
-                        dependencyNode.appendNode('version', it.version)
-                    }
-                }
-            }
-        }
-    }
-}
+apply from: "${rootProject.projectDir}/gradle/mavencentral/publish.gradle"

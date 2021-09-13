@@ -1,4 +1,4 @@
-package cz.ackee.rxsociallogin.facebook
+package io.github.ackeecz.rxsociallogin.facebook
 
 import android.app.Activity
 import android.content.Intent
@@ -8,7 +8,7 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import cz.ackee.rxsociallogin.core.LoginCancelledException
+import io.github.ackeecz.rxsociallogin.core.LoginCancelledException
 import io.reactivex.Single
 
 /**
