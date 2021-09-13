@@ -1,4 +1,4 @@
-package cz.ackee.rxsociallogin.google
+package io.github.ackeecz.rxsociallogin.google
 
 import android.app.Activity
 import android.content.Context
@@ -12,7 +12,7 @@ import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.tasks.Task
-import cz.ackee.rxsociallogin.core.LoginCancelledException
+import io.github.ackeecz.rxsociallogin.core.LoginCancelledException
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 

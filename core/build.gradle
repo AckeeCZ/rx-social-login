@@ -10,6 +10,7 @@ android {
         versionCode = libProperties['VERSION_CODE']
         versionName libProperties['VERSION_NAME']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        archivesBaseName = "rx-social-login-core"
     }
     buildTypes {
         release {
@@ -24,25 +25,8 @@ dependencies {
 }
 
 ext {
-    bintrayName = 'core'
-    publishedArtifactId = 'core'
-
-    libraryName = 'Rx Social Login'
-    libraryDescription = 'Core functionality for Rx Social Login'
+    PUBLISH_ARTIFACT_ID = 'rx-social-login-core'
+    POM_DESCRIPTION = 'Core functionality for Rx Social Login'
 }
 
-apply from: rootProject.file('gradle/bintray/install.gradle')
-apply from: rootProject.file('gradle/bintray/bintray.gradle')
-
-publishing {
-    publications {
-        library(MavenPublication) {
-            setGroupId(libProperties['GROUP'])
-            setArtifactId(bintrayName)
-            version libProperties['VERSION_NAME']
-            afterEvaluate {
-                artifact(bundleReleaseAar)
-            }
-        }
-    }
-}
+apply from: "${rootProject.projectDir}/gradle/mavencentral/publish.gradle"
