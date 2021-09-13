@@ -42,7 +42,7 @@ ext.libProperties = new Properties()
 ext.libProperties.load(file("${rootDir}/lib.properties").newReader())
 
 ext {
-    rxJavaVersion = '2.2.16'
+    rxJavaVersion = '2.2.21'
 }
 
 apply plugin: 'io.codearte.nexus-staging' // this should be at the end of the file
