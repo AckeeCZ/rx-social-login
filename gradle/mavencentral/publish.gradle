@@ -64,10 +64,11 @@ publishing {
             version libProperties['VERSION_NAME']
 
             // Two artifacts, the `aar` (or `jar`) and the sources
+            def artifactName = PUBLISH_ARTIFACT_ID
             if (project.plugins.findPlugin("com.android.library")) {
-                artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+                artifact("$buildDir/outputs/aar/$artifactName-release.aar")
             } else {
-                artifact("$buildDir/libs/${project.getName()}-${version}.jar")
+                artifact("$buildDir/libs/$artifactName-${version}.jar")
             }
             artifact androidSourcesJar
             artifact javadocJar
