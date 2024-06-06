@@ -34,7 +34,7 @@ class RxFacebookLogin {
     }
 
     private fun loginInternal(activity: Activity?, fragment: Fragment?, readPermissions: Collection<String>, publishPermissions: Collection<String>?): Single<String> {
-        return Single.create<String> { emitter ->
+        return Single.create { emitter ->
             loginManager.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
                 override fun onSuccess(result: LoginResult) {
                     emitter.onSuccess(result.accessToken.token)
@@ -49,16 +49,14 @@ class RxFacebookLogin {
                 }
             })
             if (publishPermissions != null) {
-                if (activity != null) {
-                    loginManager.logInWithPublishPermissions(activity, publishPermissions)
-                } else {
-                    loginManager.logInWithPublishPermissions(fragment, publishPermissions)
+                when {
+                    activity != null -> loginManager.logInWithPublishPermissions(activity, publishPermissions)
+                    fragment != null -> loginManager.logInWithPublishPermissions(fragment, publishPermissions)
                 }
             } else {
-                if (activity != null) {
-                    loginManager.logInWithReadPermissions(activity, readPermissions)
-                } else {
-                    loginManager.logInWithReadPermissions(fragment, readPermissions)
+                when {
+                    activity != null -> loginManager.logInWithReadPermissions(activity, readPermissions)
+                    fragment != null -> loginManager.logInWithReadPermissions(fragment, readPermissions)
                 }
             }
             emitter.setCancellable {
